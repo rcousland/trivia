@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const config = require('./config.js').express
+const config = require('./config/express.js')
 const port = config.port
 const host = config.host
 

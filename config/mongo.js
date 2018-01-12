@@ -1,9 +1,4 @@
-module.exports.express = {
-    host: 'localhost',
-    port: 3000
-}
-
-module.exports.mongo = {
+module.exports = {
     host: 'localhost',
     port: 27017,
     db: 'test',
