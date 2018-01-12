@@ -17,7 +17,7 @@ module.exports.newGame = (callback) => {
                     callback(null,gameId)
                 }
                 else {
-                    loopBody()
+                    gameIdGenerate()
                 }
             }
         })
