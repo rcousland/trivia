@@ -1,5 +1,5 @@
 const mongojs = require('mongojs')
-const mongoUrl = require('../config/mongo.js').url()
+const mongoUrl = require('../config/mongo.js')
 
 // Connect to mongo DB and set events
 const db = mongojs( mongoUrl );

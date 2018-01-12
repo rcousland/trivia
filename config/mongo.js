@@ -3,6 +3,6 @@ module.exports = {
     port: 27017,
     db: 'test',
     url: () => {
-        return this.host + ":" + this.port + "/" + this.db;
+        return this.host + ":" + this.port + "/" + this.db
     }
 }
