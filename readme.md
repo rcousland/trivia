@@ -1,0 +1,1 @@
+This is a basic trivia game powered by a Node.js(express) backend connected to a mongo DB. Enjoy!!!
