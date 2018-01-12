@@ -5,7 +5,7 @@ module.exports.newGame = (callback) => {
 
 	gameIdGenerate();
 	function gameIdGenerate(){
-		gameId = random(6);
+		gameId = Math.floor(Math.random()*90000) + 10000; //generates random 5-digit number
 		schema.gameIdFind( gameId, (err,data) => {
 			if (err){
 				return callback(err,null);
