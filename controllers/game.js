@@ -10,7 +10,7 @@ module.exports.newGame = (callback) => {
 			if (err){
 				return callback(err,null);
 			}
-			else{ 
+			else{ //test
 				if(gameId != data){
 					callback(null,gameId);
 				}
