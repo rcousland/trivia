@@ -1,6 +1,4 @@
-const models = require('../../models/');
-//var schema = require('../controllers/schema/');
-
+const model = require('../../models/');
 
 module.exports = (callback) => {
 	// start new game....
@@ -10,7 +8,7 @@ module.exports = (callback) => {
 	function gameIdGenerate(){
 		var gameId = Math.floor(Math.random()*90000) + 10000; //generates random 5-digit number
 		var query = {'gameId': gameId};
-		models.games.findOne( query, (err,data) => {
+		model.games.findOne( query, (err,data) => {
 			if (err){
 				return callback(err,null);
 			}
@@ -25,7 +23,7 @@ module.exports = (callback) => {
 	}
 	function gameIdInsert(gameId){
 		var newDoc = {'gameId': gameId};
-		models.games.insert( newDoc, (err,data) => {
+		model.insert( newDoc, (err,data) => {
 			if (err){
 				return callback(err,null);
 			}
