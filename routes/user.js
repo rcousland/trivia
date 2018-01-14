@@ -1,17 +1,27 @@
 const express = require('express');
 var router = express.Router();
 
-const game = require('../controllers/game.js');
+var game = require('../controllers/game/');
 
 router.get('/newgame', (req, res) => {
+
+	console.log('ty',typeof(game.newGame));
 	game.newGame( (err,data) => {
 		if(err){
 			res.status( 500 ).send(err);
 		}
 		else{
-			res.send( data );
+			var json = JSON.stringify({
+				'gameId': data
+			});
+			console.log(json);
+			res.setHeader('Content-Type', 'application/json');
+			res.send(json);
 		}
 	});
+
+
+
 	// start new game....
 	// create "gameID"
 	// send gameID and first question
