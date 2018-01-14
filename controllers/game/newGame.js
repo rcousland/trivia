@@ -23,7 +23,7 @@ module.exports = (callback) => {
 	}
 	function gameIdInsert(gameId){
 		var newDoc = {'gameId': gameId};
-		model.insert( newDoc, (err,data) => {
+		model.games.insert( newDoc, (err,data) => {
 			if (err){
 				return callback(err,null);
 			}
