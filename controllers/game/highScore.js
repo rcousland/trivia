@@ -1,3 +1,5 @@
+const models = require('../../models/');
+
 // module.exports = () =>{
 
 //         // post users name. enter into DB
