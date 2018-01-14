@@ -9,16 +9,12 @@ router.get('/newgame', (req, res) => {
 			res.status( 500 ).send(err);
 		}
 		else{
-			var json = JSON.stringify({
-				'gameId': data
-			});
+			var json = JSON.stringify(data);
 			console.log(json);
 			res.setHeader('Content-Type', 'application/json');
 			res.send(json);
 		}
 	});
-
-
 
 	// start new game....
 	// create "gameID"
