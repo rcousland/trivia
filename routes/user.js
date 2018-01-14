@@ -4,8 +4,6 @@ var router = express.Router();
 var game = require('../controllers/game/');
 
 router.get('/newgame', (req, res) => {
-
-	console.log('ty',typeof(game.newGame));
 	game.newGame( (err,data) => {
 		if(err){
 			res.status( 500 ).send(err);

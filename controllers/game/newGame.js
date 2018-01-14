@@ -12,14 +12,12 @@ module.exports = (callback) => {
 			if (err){
 				return callback(err,null);
 			}
+			else if(data == null ){
+				gameIdInsert(gameId);
+			}
 			else{
-				if(data == null ){
-					gameIdInsert(gameId);
-				}
-				else {
-					console.log(gameId,': allready excists. generating new one');
-					gameIdGenerate();
-				}
+				console.log(gameId,': allready excists. generating new one');
+				gameIdGenerate();
 			}
 		});
 	}
@@ -29,14 +27,12 @@ module.exports = (callback) => {
 			if (err){
 				return callback(err,null);
 			}
-			else{
-				if(data.gameId == null ){
-					return callback('Mongo: Unable to insert new gameID',null);
-				}
-				else {
-					console.log(data);
-					return callback(null, data);
-				}
+			else if(data.gameId == null ){
+				return callback('Mongo: Unable to insert new gameID',null);
+			}
+			else {
+				console.log(data);
+				return callback(null, data);
 			}
 		});
 	}
