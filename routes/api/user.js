@@ -1,7 +1,7 @@
 const express = require('express');
 var router = express.Router();
 
-var game = require('../controllers/game/');
+var game = require('../../controllers/game/');
 
 router.get('/newgame', (req, res) => {
 	game.newGame( (err,data) => {
