@@ -5,7 +5,7 @@ const port = require('./config/express.js').port;
 
 // Load routes
 app.use(express.static('public'));
-app.use('/user', require('./routes/user.js'));
+app.use('/api/user', require('./routes/api/user.js'));
 
 // Start express
 app.listen(port, host, () => {
