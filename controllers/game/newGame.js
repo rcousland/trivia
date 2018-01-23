@@ -22,7 +22,7 @@ module.exports = (callback) => {
 		});
 	}
 	function gameIdInsert(gameId){
-		var newDoc = {'gameId': gameId};
+		var newDoc = {'gameId': gameId, 'nextQuestion': 1, 'userAnswers': [], 'score':0 };
 		model.games.insert( newDoc, (err,data) => {
 			if (err){
 				return callback(err,null);
@@ -31,8 +31,9 @@ module.exports = (callback) => {
 				return callback('Mongo: Unable to insert new gameID',null);
 			}
 			else {
-				console.log(data);
-				return callback(null, data);
+				var filter = data;
+				delete filter._id;
+				return callback(null, filter);
 			}
 		});
 	}
