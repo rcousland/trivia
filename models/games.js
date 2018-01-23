@@ -3,13 +3,13 @@ const collection = db.collection('games');
 
 module.exports.findOne = (query, callback) => {
 	collection.findOne( query, (err, doc) => {
-		if(err) { return callback(err,null);}
+		if(err) { return callback('mongo error',null);}
 		else{ return callback(null,doc);}
 	});
 };
 module.exports.insert = (newDoc, callback) => {
 	collection.insert( newDoc, (err, doc) => {
-		if(err) { return callback(err,null);}
+		if(err) { return callback('mongo error',null);}
 		else{ return callback(null,doc);}
 	});
 };
