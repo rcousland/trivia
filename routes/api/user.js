@@ -1,5 +1,6 @@
 const express = require('express');
 var router = express.Router();
+const jsonParser = require('body-parser').json();
 
 var game = require('../../controllers/game/');
 
@@ -10,7 +11,6 @@ router.get('/newgame', (req, res) => {
 		}
 		else{
 			var json = JSON.stringify(data);
-			console.log(json);
 			res.setHeader('Content-Type', 'application/json');
 			res.send(json);
 		}
@@ -18,37 +18,34 @@ router.get('/newgame', (req, res) => {
 
 	// start new game....
 	// create "gameID"
-	// send gameID and first question
+	// send gameID
 });
-// router.post('/answer', jsonParser, (req, res) => {
-//     var gameID = req.body.gameID
-//     var questionID = req.body.questionID
-//     var userAnswerID = req.body.userAnswer
+router.post('/question', jsonParser, (req, res) => {
+	var gameId = req.body.gameId;
+	game.getQuestion( gameId, (err,data) => {
+		if(err){
+			res.status( 500 ).send(err);
+		}
+		else{
+			res.send( data );
+		}
+	});
+	// get next question
+});
 
-//     game.userAnswer( , (err,data) => {
-//         if(err){
-//             res.status( 500 ).send(err)
-//         }
-//         else{
-//             res.send( data )
-//         }
-//     })
-
-//     // post answer to question
-//     // get response.
-// });
-
-// router.post('/name/{name}', (req, res) => {
-//     game.usersName( (err,data) => {
-//         if(err){
-//             res.status( 500 ).send(err)
-//         }
-//         else{
-//             res.send( data )
-//         }
-//     })
-//     // post users name. enter into DB
-//     // get response
-// });
+router.post('/answer', jsonParser, (req, res) => {
+	var gameId = req.body.gameId;
+	var userAnswer = req.body.userAnswer;
+	game.answer( gameId, userAnswer , (err,data) => {
+		if(err){
+			res.status( 500 ).send(err);
+		}
+		else{
+			res.send( data );
+		}
+	});
+	// post answer to question
+	// get response.
+});
 
 module.exports = router;
