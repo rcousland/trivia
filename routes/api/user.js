@@ -6,13 +6,11 @@ var game = require('../../controllers/game/');
 
 router.get('/newgame', (req, res) => {
 	game.newGame( (err,data) => {
-		if(err){
+		if(err){ 
 			res.status( 500 ).send(err);
 		}
 		else{
-			var json = JSON.stringify(data);
-			res.setHeader('Content-Type', 'application/json');
-			res.send(json);
+			res.json(data);
 		}
 	});
 
@@ -23,11 +21,11 @@ router.get('/newgame', (req, res) => {
 router.post('/question', jsonParser, (req, res) => {
 	var gameId = req.body.gameId;
 	game.getQuestion( gameId, (err,data) => {
-		if(err){
+		if(err){ 
 			res.status( 500 ).send(err);
 		}
 		else{
-			res.send( data );
+			res.json(data);
 		}
 	});
 	// get next question
@@ -37,11 +35,11 @@ router.post('/answer', jsonParser, (req, res) => {
 	var gameId = req.body.gameId;
 	var userAnswer = req.body.userAnswer;
 	game.answer( gameId, userAnswer , (err,data) => {
-		if(err){
+		if(err){ 
 			res.status( 500 ).send(err);
 		}
 		else{
-			res.send( data );
+			res.json(data);
 		}
 	});
 	// post answer to question
