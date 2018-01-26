@@ -6,9 +6,9 @@
 5. server provides next question -done
 6. server validates client answer. stores in gameId provided. update games document with progress 2 - done
 7. validate answers generate score. - done
-8. update game collection update highscore document.
-9. if user has answered all questions. end game. calculate score
-10. get user to provide name.
-11. return highscore document to user.
+8. update game collection update highscore document. -done
+9. if user has answered all questions. end game. calculate score -done
+10. get user to provide name. -done
+11. return highscore document to user. -done
 
 
