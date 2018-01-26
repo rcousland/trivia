@@ -1,8 +1,8 @@
 const mongojs = require('mongojs');
-const mongoUrl = require('../config/mongo.js').url();
+const m = require('../config/mongo.js');
 
 // Connect to mongo DB and set events
-const db = mongojs( mongoUrl );
+const db = mongojs( m.url() , [] , m.options );
 
 db.on('error', (err) => {
 	console.log('database error', err);
