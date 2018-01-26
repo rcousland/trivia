@@ -1,32 +1,43 @@
 const model = require('../../models/');
-const maxQuestions = 6;
+const maxQuestions = require('../../config/game.js').maxQuestions;
 
 module.exports = (gameId, userAnswer,  callback) => {
 // enter usersAnswer into gamesId document. validate answer. return outcome.
-
-	var questionId = 0;
-	var realAnswer = '';
-	var isUserAnswerCorrect = null;
-
+	var questionId, realAnswer, isUserAnswerCorrect;
 
 	getquestionID();
 	function getquestionID(){
 		var query = {'gameId': gameId};
 		model.games.findOne( query, (err,data) => {
+			// count user answers allready made
+			var count = Object.keys(data.userAnswers).length;
+			// error logging
 			if (err){
 				return callback(err,null);
 			}
 			else if(data == null ){
 				return callback('gameId missing',null);
 			}
+			// when user has allready finished game
+			else if( count == maxQuestions ){
+				var response = {
+					gameId: gameId,
+					gameFinished: true,
+					score: data.score,
+					maxQuestions: maxQuestions,
+					userAnswers: data.userAnswers
+				};
+				return callback(null, response);
+			}
+			// when user hasn't allready finished game
 			else{
-
 				questionId = data.nextQuestion;
 				getRealAnswer();
 			}
 		});
 	}
 
+	// get real answer
 	function getRealAnswer(){
 		var query = {'questionId': questionId};
 		model.qa.findOne( query, (err,data) => {
@@ -42,19 +53,22 @@ module.exports = (gameId, userAnswer,  callback) => {
 			}
 		});
 	}
+
+	// compare user uanswer to real answer
 	function verifyUserAnswer(){
 		if( userAnswer == realAnswer ){
 			isUserAnswerCorrect = true;
-
-		}else{
+		}
+		else{
 			isUserAnswerCorrect = false;
 		}
 		updateGame();
-
 	}
 
+	// update gamieId document with user results. return response from new data entered into mongo
 	function updateGame(){
-		var query = {
+		// create command for mongo
+		var mongoCmd = {
 			query: {'gameId': gameId },
 			update: {
 				$push: {userAnswers: {'questionId' : questionId, 'userAnswer': userAnswer, 'correctAnswer': isUserAnswerCorrect} }, 
@@ -62,10 +76,13 @@ module.exports = (gameId, userAnswer,  callback) => {
 			},
 			new: true
 		};
+		// increase score if correct
 		if (isUserAnswerCorrect){
-			query.update.$inc.score =  1 ;
+			mongoCmd.update.$inc.score =  1 ;
 		}
-		model.games.findAndModify( query, (err,data) => {
+		model.games.findAndModify( mongoCmd, (err,data) => {
+			
+			// Error handling
 			if (err){
 				return callback(err,null);
 			}
@@ -73,26 +90,36 @@ module.exports = (gameId, userAnswer,  callback) => {
 				return callback('gameId missing',null);
 			}
 			else{
-				var nCount = Object.keys(data.userAnswers).length - 1;
-				var response = {
-					'questionId':  data.userAnswers[nCount].questionId,
-					'nextQuestion': data.nextQuestion,
-					'userAnswer': data.userAnswers[nCount].userAnswer,
-					'correctAnswer': data.userAnswers[nCount].correctAnswer,
-					'score': data.score,
-					'maxQuestions': maxQuestions,
-					'gameFinished': false
-				};
-				if (data.nextQuestion > maxQuestions ){
-					delete response.nextQuestion;
-					response.gameFinished = true;
-					return callback(null, response);
-				}
-				else{
-					return callback(null, response);
-				}
+				sendResponse(data);
 			}
 		});
 	}
+	function sendResponse(data){
+		var lastIndex = Object.keys(data.userAnswers).length - 1;
+		var count = lastIndex + 1;
+		var response = {
+			'questionId':  data.userAnswers[lastIndex].questionId,
+			'userAnswer': data.userAnswers[lastIndex].userAnswer,
+			'correctAnswer': data.userAnswers[lastIndex].correctAnswer,
+			'score': data.score,
+			'maxQuestions': maxQuestions,
+		};
 
+		// if game is still in progress
+		if ( count < maxQuestions){
+			response.nextQuestion = data.nextQuestion;
+			response.gameFinished = false;
+			return callback(null, response);
+		}
+		// if game has finished
+		else if ( count ==  maxQuestions ){
+			response.gameFinished = true;
+			response.userAnswers = data.userAnswers;
+			return callback(null, response);
+		}
+		// error handling
+		else {
+			return callback('answer.js line 122 catch', null);
+		}
+	}
 };
