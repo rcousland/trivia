@@ -18,9 +18,21 @@ router.get('/newgame', (req, res) => {
 	// create "gameID"
 	// send gameID
 });
+router.get('/highScore', (req, res) => {
+	game.highScore( (err,data) => {
+		if(err){ 
+			res.status( 500 ).send(err);
+		}
+		else{
+			res.json(data);
+		}
+	});
+	// post gameId and Name
+	// get top 10 scores
+});
 router.post('/question', jsonParser, (req, res) => {
 	var gameId = req.body.gameId;
-	game.getQuestion( gameId, (err,data) => {
+	game.question( gameId, (err,data) => {
 		if(err){ 
 			res.status( 500 ).send(err);
 		}
@@ -45,5 +57,21 @@ router.post('/answer', jsonParser, (req, res) => {
 	// post answer to question
 	// get response.
 });
+
+router.post('/enterScore', jsonParser, (req, res) => {
+	var gameId = req.body.gameId;
+	var userName = req.body.userName;
+	game.enterScore( gameId, userName, (err,data) => {
+		if(err){ 
+			res.status( 500 ).send(err);
+		}
+		else{
+			res.json(data);
+		}
+	});
+	// post gameId and Name
+	// get top 10 scores
+});
+
 
 module.exports = router;
