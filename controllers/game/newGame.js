@@ -31,9 +31,8 @@ module.exports = (callback) => {
 				return callback('Mongo: Unable to insert new gameID',null);
 			}
 			else {
-				var filter = data;
-				delete filter._id;
-				return callback(null, filter);
+				var response = {'gameId': data.gameId };
+				return callback(null, response);
 			}
 		});
 	}
