@@ -11,4 +11,4 @@
 10. get user to provide name. -done
 11. return highscore document to user. -done
 
-
+12. convert to promises / async/await
