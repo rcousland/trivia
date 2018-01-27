@@ -10,6 +10,5 @@
 9. if user has answered all questions. end game. calculate score -done
 10. get user to provide name. -done
 11. return highscore document to user. -done
-
 12. convert to promises / async/await
 13. test 2
