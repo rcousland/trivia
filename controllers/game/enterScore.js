@@ -1,5 +1,6 @@
 const model = require('../../models/');
 const game = require('../game/');
+const mongoErr = {'Error':'Mongo Error'};
 
 module.exports = (gameId, userName, callback) => {
 	
@@ -13,14 +14,14 @@ module.exports = (gameId, userName, callback) => {
 				return callback(err,null);
 			}
 			else if(data == null ){
-				return callback('gameId missing',null);
+				return callback(mongoErr,null);
 			}
 			// pass score to next function
 			else{
 				var nameAndScoreEntry = {
-					gameId: gameId,
-					userName: userName,
-					score: data.score
+					'gameId': gameId,
+					'userName': userName,
+					'score': data.score
 				};
 				updateHighScoreList(nameAndScoreEntry);
 			}
@@ -33,7 +34,7 @@ module.exports = (gameId, userName, callback) => {
 				return callback(err,null);
 			}
 			else if(data.userName == null ){
-				return callback('Mongo: Unable to insert new userName',null);
+				return callback( {'error': 'Mongo: Unable to insert new userName'} ,null);
 			}
 			else {
 				getHighScores();

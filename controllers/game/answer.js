@@ -1,6 +1,7 @@
 const model = require('../../models/');
 const maxQuestions = require('../../config/game.js').maxQuestions;
-const mongoUpdateCmd = require('./mongoUpdateCmd.js')
+const mongoUpdateAnswerCmd = require('../mongoUpdateAnswerCmd.js');
+const mongoErr = {'Error':'Mongo Error'};
 
 module.exports = (gameId, userAnswer,  callback) => {
 // enter usersAnswer into gamesId document. validate answer. return outcome.
@@ -17,9 +18,9 @@ module.exports = (gameId, userAnswer,  callback) => {
 				return callback(err,null);
 			}
 			else if(data == null ){
-				return callback('gameId missing',null);
+				return callback(mongoErr,null);
 			}
-			// when user has allready finished game
+			// when game is allready finished
 			else if( count == maxQuestions ){
 				var response = {
 					'gameId': gameId,
@@ -30,7 +31,7 @@ module.exports = (gameId, userAnswer,  callback) => {
 				};
 				return callback(null, response);
 			}
-			// when user hasn't allready finished game
+			// when game is still in progress
 			else{
 				questionId = data.nextQuestion;
 				getRealAnswer();
@@ -46,7 +47,7 @@ module.exports = (gameId, userAnswer,  callback) => {
 				return callback(err,null);
 			}
 			else if(data == null ){
-				return callback('gameId missing',null);
+				return callback(mongoErr,null);
 			}
 			else{
 				realAnswer = data.answer;
@@ -58,15 +59,14 @@ module.exports = (gameId, userAnswer,  callback) => {
 	// update gamieId document with user results. return response from new data entered into mongo
 	function updateGame(){
 		// create command for mongo
-		var mongoCmd = new mongoUpdateCmd(gameId, questionId, userAnswer, realAnswer)
-
+		var mongoCmd = new mongoUpdateAnswerCmd(gameId, questionId, userAnswer, realAnswer);
 		model.games.findAndModify( mongoCmd, (err,data) => {
 			// Error handling
 			if (err){
 				return callback(err,null);
 			}
 			else if(data == null ){
-				return callback('gameId missing',null);
+				return callback(mongoErr,null);
 			}
 			else{
 				sendResponse(data);
@@ -74,9 +74,9 @@ module.exports = (gameId, userAnswer,  callback) => {
 		});
 	}
 	function sendResponse(data){
-		var count = Object.keys(data.userAnswers).length
-		var lastUserAnswer = data.userAnswers[ count - 1 ]
-		var score = data.score
+		var count = Object.keys(data.userAnswers).length;
+		var lastUserAnswer = data.userAnswers[ count - 1 ];
+		var score = data.score;
 		var response = {
 			'questionId':  lastUserAnswer.questionId,
 			'userAnswer': lastUserAnswer.userAnswer,
