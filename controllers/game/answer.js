@@ -1,5 +1,6 @@
 const model = require('../../models/');
 const maxQuestions = require('../../config/game.js').maxQuestions;
+const mongoUpdateCmd = require('./mongoUpdateCmd.js')
 
 module.exports = (gameId, userAnswer,  callback) => {
 // enter usersAnswer into gamesId document. validate answer. return outcome.
@@ -21,11 +22,11 @@ module.exports = (gameId, userAnswer,  callback) => {
 			// when user has allready finished game
 			else if( count == maxQuestions ){
 				var response = {
-					gameId: gameId,
-					gameFinished: true,
-					score: data.score,
-					maxQuestions: maxQuestions,
-					userAnswers: data.userAnswers
+					'gameId': gameId,
+					'gameFinished': true,
+					'score': data.score,
+					'maxQuestions': maxQuestions,
+					'userAnswers': data.userAnswers
 				};
 				return callback(null, response);
 			}
@@ -49,39 +50,17 @@ module.exports = (gameId, userAnswer,  callback) => {
 			}
 			else{
 				realAnswer = data.answer;
-				verifyUserAnswer();
+				updateGame();
 			}
 		});
-	}
-
-	// compare user uanswer to real answer
-	function verifyUserAnswer(){
-		if( userAnswer == realAnswer ){
-			isUserAnswerCorrect = true;
-		}
-		else{
-			isUserAnswerCorrect = false;
-		}
-		updateGame();
 	}
 
 	// update gamieId document with user results. return response from new data entered into mongo
 	function updateGame(){
 		// create command for mongo
-		var mongoCmd = {
-			query: {'gameId': gameId },
-			update: {
-				$push: {userAnswers: {'questionId' : questionId, 'userAnswer': userAnswer, 'correctAnswer': isUserAnswerCorrect} }, 
-				$inc: {nextQuestion: 1 }
-			},
-			new: true
-		};
-		// increase score if correct
-		if (isUserAnswerCorrect){
-			mongoCmd.update.$inc.score =  1 ;
-		}
+		var mongoCmd = new mongoUpdateCmd(gameId, questionId, userAnswer, realAnswer)
+
 		model.games.findAndModify( mongoCmd, (err,data) => {
-			
 			// Error handling
 			if (err){
 				return callback(err,null);
@@ -95,20 +74,21 @@ module.exports = (gameId, userAnswer,  callback) => {
 		});
 	}
 	function sendResponse(data){
-		var lastIndex = Object.keys(data.userAnswers).length - 1;
-		var count = lastIndex + 1;
+		var count = Object.keys(data.userAnswers).length
+		var lastUserAnswer = data.userAnswers[ count - 1 ]
+		var score = data.score
 		var response = {
-			'questionId':  data.userAnswers[lastIndex].questionId,
-			'userAnswer': data.userAnswers[lastIndex].userAnswer,
-			'correctAnswer': data.userAnswers[lastIndex].correctAnswer,
-			'score': data.score,
+			'questionId':  lastUserAnswer.questionId,
+			'userAnswer': lastUserAnswer.userAnswer,
+			'correctAnswer': lastUserAnswer.correctAnswer,
+			'score': score,
 			'maxQuestions': maxQuestions,
 		};
 
 		// if game is still in progress
 		if ( count < maxQuestions){
-			response.nextQuestion = data.nextQuestion;
 			response.gameFinished = false;
+			response.nextQuestion = data.nextQuestion;
 			return callback(null, response);
 		}
 		// if game has finished
@@ -119,7 +99,7 @@ module.exports = (gameId, userAnswer,  callback) => {
 		}
 		// error handling
 		else {
-			return callback('answer.js line 122 catch', null);
+			return callback('answer.js line 102 catch', null);
 		}
 	}
 };
