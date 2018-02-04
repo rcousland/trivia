@@ -6,7 +6,7 @@ module.exports = (callback) => {
 		if (err){
 			return callback(err,null);
 		}
-		else if(data == null ){
+		else if(data.length == 0 ){
 			return callback( {'mongo': 'No highscore data'} , null );
 		}
 		else {
