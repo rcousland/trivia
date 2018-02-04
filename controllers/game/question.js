@@ -28,6 +28,7 @@ module.exports = (gameId, callback) => {
 
 	function getQuestionAndOptions(nextQuestion){
 		query = {'questionId': nextQuestion};
+		console.log('query',query);
 		model.qa.findOne( query, (err,data) => {
 			// error handlers
 			if (err){
@@ -38,9 +39,14 @@ module.exports = (gameId, callback) => {
 			}
 			// send question and options. remove answer
 			else{
-				var response = data;
-				delete response.answer;
-				delete response._id;          
+				var response = {
+					'questionId': data.questionId,
+					'question': data.question,
+					'o1': data.o1,
+					'o2': data.o2,
+					'o3': data.o3,
+					'o4': data.o4
+				};        
 				return callback ( null, response );
 			}
 		});
