@@ -20,7 +20,8 @@ router.get('/newgame', (req, res) => {
 });
 router.get('/highScore', async (req, res) => {
 	try {
-		res.json( await game.highScore() );
+		result = await game.highScore()
+		res.json( result );
 	} catch(e) {
 		res.status( 500 ).send(e)
 	}
