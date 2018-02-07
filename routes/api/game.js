@@ -18,18 +18,14 @@ router.get('/newgame', (req, res) => {
 	// create "gameID"
 	// send gameID
 });
-router.get('/highScore', (req, res) => {
-	game.highScore( (err,data) => {
-		if(err){ 
-			res.status( 500 ).send(err);
-		}
-		else{
-			res.json(data);
-		}
-	});
-	// post gameId and Name
-	// get top 10 scores
+router.get('/highScore', async (req, res) => {
+	try {
+		res.json( await game.highScore() );
+	} catch(e) {
+		res.status( 500 ).send(e)
+	}
 });
+
 router.post('/question', jsonParser, (req, res) => {
 	var gameId = req.body.gameId;
 	game.question( gameId, (err,data) => {

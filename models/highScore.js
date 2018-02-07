@@ -8,10 +8,12 @@ module.exports.insert = (query, callback) => {
 	});
 };
 
-module.exports.findTop10Scores = (callback) => {
-	// removeds _id and gameId fields recursively. sorts by score. highest first. and only 10 documents
-	collection.find({}, { _id: 0, gameId: 0}).sort({score: -1}).limit(10, (err, doc) => {
-		if(err) { return callback(err,null);}
-		else{ return callback(null,doc);}
+module.exports.findTop10Scores = () => {
+	return new Promise(function(resolve, reject) {
+		const query = { _id: 0, gameId: 0 }; // items will be removed from response
+		collection.find( {}, query ).sort({score: -1}).limit(10, (err, doc) => {
+			if(err){ reject(err); }
+			if(doc){ resolve(doc); } 
+		});
 	});
 };
