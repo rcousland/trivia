@@ -5,7 +5,7 @@ const mongoErr = {'Error':'Mongo Error'};
 
 module.exports = (gameId, userAnswer,  callback) => {
 // enter usersAnswer into gamesId document. validate answer. return outcome.
-	var questionId, realAnswer, isUserAnswerCorrect;
+	var questionId, realAnswer;
 
 	getquestionID();
 	function getquestionID(){
