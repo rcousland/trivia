@@ -1,39 +1,22 @@
 const model = require('../../models/');
 
-module.exports = (callback) => {
-	// start new game....
-	// create "gameID"
-	// send gameID and first question
-	gameIdGenerate();
-	function gameIdGenerate(){
-		var gameId = Math.floor(Math.random()*90000) + 10000; //generates random 5-digit number
-		var query = {'gameId': gameId};
-		model.games.findOne( query, (err,data) => {
-			if (err){
-				return callback(err,null);
-			}
-			else if(data == null ){
-				gameIdInsert(gameId);
-			}
-			else{
-				console.log(gameId,': allready excists. generating new one');
-				gameIdGenerate();
-			}
-		});
-	}
-	function gameIdInsert(gameId){
-		var newDoc = {'gameId': gameId, 'nextQuestion': 1, 'userAnswers': [], 'score':0 };
-		model.games.insert( newDoc, (err,data) => {
-			if (err){
-				return callback(err,null);
-			}
-			else if(data.gameId == null ){
-				return callback('Mongo: Unable to insert new gameID',null);
-			}
-			else {
-				var response = {'gameId': data.gameId };
-				return callback(null, response);
-			}
-		});
-	}
+module.exports = () => { // create "gameID" and pass to user
+	return new Promise( async (resolve, reject) => {
+		try {
+			var gameId, query, dbMatch
+			do { 
+				gameId = Math.floor(Math.random()*90000) + 10000; // 5 digit number
+				query = {'gameId': gameId}
+				dbMatch = await model.games.findOne( query ) // search DB for gameId
+			} 
+			while ( dbMatch ); // keep looping if dbMatch=true
+			
+			const newDoc = {'gameId': gameId, 'nextQuestion': 1, 'userAnswers': [], 'score':0 };
+			const resultInsert = await model.games.insert( newDoc ) // insert new game into DB
+			const response = {'gameId': resultInsert.gameId }; // return gameId to client
+			resolve( response )
+		} catch(e) {
+			reject(e)
+		}
+	});
 };
