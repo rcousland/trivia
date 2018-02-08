@@ -6,15 +6,13 @@ module.exports = (gameId) => new Promise( async (resolve, reject) => { // get qu
 		var query
 		query = {'gameId': gameId};
 		const game = await model.games.findOne( query)
-			if (!game) throw ('gameId missing')
+			if (!game) throw ('gameId missing: ' + gameId)
 		const count = Object.keys(game.userAnswers).length; // count users answers to questions
 			if(count == maxQuestions ){ resolve( {gameFinished: true} )}
-
 		const nextQuestionId = count + 1
 		query = {'questionId': nextQuestionId};
 		const question = await model.qa.findOne( query )
 			if (!question) throw ('questionId missing: ' + nextQuestionId)
-		
 		const response = {
 			'questionId': question.questionId,
 			'question': question.question,
