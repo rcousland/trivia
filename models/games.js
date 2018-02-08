@@ -3,13 +3,13 @@ const collection = db.collection('games');
 
 const mongoErr = {'Error':'Mongo Error'};
 
-module.exports.findOne = (query) => new Promise(function(resolve, reject) {
+module.exports.findOne = (query) => new Promise( (resolve, reject) => {
 	collection.findOne( query, (err, doc) => {
 		if(err){ reject(err); }
 		else{ resolve(doc); } 
 	});
 });
-module.exports.insert = (newDoc) => new Promise(function(resolve, reject) {
+module.exports.insert = (newDoc) => new Promise( (resolve, reject) => {
 	collection.insert( newDoc, (err, doc) => {
 		if(err){ reject(err); }
 		else{ resolve(doc); } 
