@@ -1,8 +1,8 @@
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 const jsonParser = require('body-parser').json();
 
-var game = require('../../controllers/game/');
+const game = require('../../controllers/game/');
 
 router.get('/newgame', async (req, res) => { // generate new gameId. pass to client
 	try {
@@ -47,20 +47,16 @@ router.post('/answer', jsonParser, async (req, res) => { // post answer to quest
 	}
 });
 
-router.post('/enterScore', jsonParser, (req, res) => {
-	var gameId = req.body.gameId;
-	var userName = req.body.userName;
-	game.enterScore( gameId, userName, (err,data) => {
-		if(err){ 
-			res.status( 500 ).send(err);
-		}
-		else{
-			res.json(data);
-		}
-	});
-	// post gameId and Name
-	// get top 10 scores
+router.post('/enterScore', jsonParser, async (req, res) => { // client posts gameId and Name. return top 10 scores
+	const gameId = req.body.gameId;
+	const userName = req.body.userName;
+	try {
+		const result = await game.enterScore( gameId , userName)
+		res.json( result );
+	} catch(e) {
+		const errResponse = {'err':e}
+		res.status( 500 ).json( errResponse )
+	}
 });
-
 
 module.exports = router;
