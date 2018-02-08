@@ -10,15 +10,15 @@ module.exports = (gameId) => new Promise( async (resolve, reject) => { // get qu
 			if(count == maxQuestions ){ resolve( {gameFinished: true} )}
 		const nextQuestionId = count + 1
 		query = {'questionId': nextQuestionId};
-		const question = await model.qa.findOne( query )
-			if (!question) throw ('questionId missing: ' + nextQuestionId)
+		const qaData = await model.qa.findOne( query )
+			if (!qaData) throw ('questionId missing: ' + nextQuestionId)
 		const response = {
-			'questionId': question.questionId,
-			'question': question.question,
-			'o1': question.o1,
-			'o2': question.o2,
-			'o3': question.o3,
-			'o4': question.o4
+			'questionId': qaData.questionId,
+			'question': qaData.question,
+			'o1': qaData.o1,
+			'o2': qaData.o2,
+			'o3': qaData.o3,
+			'o4': qaData.o4
 		}
 		resolve( response )
 	} catch(e) {

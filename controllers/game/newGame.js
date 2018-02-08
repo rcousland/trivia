@@ -11,8 +11,8 @@ module.exports = () => new Promise( async (resolve, reject) => { // return gameI
 		while ( dbMatch ); // keep looping if dbMatch=true
 		
 		const newDoc = {'gameId': gameId, 'nextQuestion': 1, 'userAnswers': [], 'score':0 };
-		const resultInsert = await model.games.insert( newDoc ) // insert new game into DB
-		const response = {'gameId': resultInsert.gameId }; // return gameId to client
+		const insert = await model.games.insert( newDoc ) // insert new game into DB
+		const response = {'gameId': insert.gameId }; // return gameId to client
 		resolve( response )
 	} catch(e) {
 		reject(e)
