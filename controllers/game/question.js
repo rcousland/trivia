@@ -3,8 +3,7 @@ const maxQuestions = require('../../config/game.js').maxQuestions;
 
 module.exports = (gameId) => new Promise( async (resolve, reject) => { // get questions
 	try {
-		var query
-		query = {'gameId': gameId};
+		var query = {'gameId': gameId};
 		const game = await model.games.findOne( query)
 			if (!game) throw ('gameId missing: ' + gameId)
 		const count = Object.keys(game.userAnswers).length; // count users answers to questions
