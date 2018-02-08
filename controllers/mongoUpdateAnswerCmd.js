@@ -1,4 +1,4 @@
-module.exports = function (gameId, questionId, userAnswer, realAnswer) {
+module.exports = (gameId, questionId, userAnswer, realAnswer) => {
 	this.query = {'gameId': gameId };
 	this.update = {
 		$push: {
