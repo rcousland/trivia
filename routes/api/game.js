@@ -1,37 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const jsonParser = require('body-parser').json();
-
 const game = require('../../controllers/game/');
 
 router.get('/newgame', async (req, res) => { // generate new gameId. pass to client
 	try {
-		const result = await game.newGame()
-		res.json( result );
+		res.json( await game.newGame() );
 	} catch(e) {
-		const errResponse = {'err': e }
-		res.status( 500 ).json( errResponse )
+		res.status( 500 ).json( {'err':e} )
 	}
 });
 
 router.get('/highScore', async (req, res) => { // get top 10 results
 	try {
-		const result = await game.highScore()
-		res.json( result );
+		res.json( await game.highScore() );
 	} catch(e) {
-		const errResponse = {'err':e}
-		res.status( 500 ).json(errResponse)
+		res.status( 500 ).json( {'err':e} )
 	}
 });
 
 router.post('/question', jsonParser, async (req, res) => { // get next question
 	const gameId = req.body.gameId;
 	try {
-		const result = await game.question( gameId )
-		res.json( result );
+		res.json( await game.question(gameId) );
 	} catch(e) {
-		const errResponse = {'err':e}
-		res.status( 500 ).json( errResponse )
+		res.status( 500 ).json( {'err':e} )
 	}
 });
 
@@ -39,11 +32,9 @@ router.post('/answer', jsonParser, async (req, res) => { // post answer to quest
 	const gameId = req.body.gameId;
 	const userAnswer = req.body.userAnswer;
 	try {
-		const result = await game.answer( gameId , userAnswer)
-		res.json( result );
+		res.json( await game.answer(gameId,userAnswer) );
 	} catch(e) {
-		const errResponse = {'err':e}
-		res.status( 500 ).json( errResponse )
+		res.status( 500 ).json( {'err':e} )
 	}
 });
 
@@ -51,11 +42,9 @@ router.post('/enterScore', jsonParser, async (req, res) => { // client posts gam
 	const gameId = req.body.gameId;
 	const userName = req.body.userName;
 	try {
-		const result = await game.enterScore( gameId , userName)
-		res.json( result );
+		res.json( await game.enterScore( gameId , userName) );
 	} catch(e) {
-		const errResponse = {'err':e}
-		res.status( 500 ).json( errResponse )
+		res.status( 500 ).json( {'err':e} )
 	}
 });
 
