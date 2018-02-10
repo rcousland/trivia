@@ -4,7 +4,7 @@ module.exports = {
 	db: process.env.MONGO_DB || 'trivia',
 	options: {
 		autoReconnect: true,
-		reconnectTries: 30,
+		reconnectTries: 5,
 		reconnectInterval: 1000
 	},
 	url: function() {
