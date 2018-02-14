@@ -1,10 +1,10 @@
 This is a basic trivia game powered by a Node.js(express) backend connected to a mongo DB. Enjoy!!!
 
+install package dependicies
+#npm install 
 
-Mongo Needs to be installed and running.
+Setup db,collections and testData in mongo
+#npm run dbSetupData
 
-Run the below command to setup db and collections in mongo
-#npm run setupDb
-
-Run the below command to setup db, collections and insert test data.
-#npm run setupDbInsertTestData
+Run Application
+#npm start
