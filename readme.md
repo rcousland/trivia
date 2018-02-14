@@ -4,7 +4,7 @@ install package dependicies
 #npm install 
 
 Setup db,collections and testData in mongo
-#npm run dbSetupData
+#npm run setup
 
 Run Application
 #npm start
