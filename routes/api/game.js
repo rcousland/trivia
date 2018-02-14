@@ -7,7 +7,8 @@ router.get('/newgame', async (req, res) => { // generate new gameId. pass to cli
 	try {
 		res.json( await game.newGame() );
 	} catch(e) {
-		res.status( 500 ).json( {'err':e} )
+		saveError(req.url, e)
+		res.status( 500 ).json( {'err':'internal'} )
 	}
 });
 
@@ -15,7 +16,8 @@ router.get('/highScore', async (req, res) => { // get top 10 results
 	try {
 		res.json( await game.highScore() );
 	} catch(e) {
-		res.status( 500 ).json( {'err':e} )
+		saveError(req.url, e)
+		res.status( 500 ).json( {'err':'internal'} )
 	}
 });
 
@@ -24,7 +26,8 @@ router.post('/question', jsonParser, async (req, res) => { // get next question
 	try {
 		res.json( await game.question(gameId) );
 	} catch(e) {
-		res.status( 500 ).json( {'err':e} )
+		saveError(req.url, e)
+		res.status( 500 ).json( {'err':'internal'} )
 	}
 });
 
@@ -34,7 +37,8 @@ router.post('/answer', jsonParser, async (req, res) => { // post answer to quest
 	try {
 		res.json( await game.answer(gameId,userAnswer) );
 	} catch(e) {
-		res.status( 500 ).json( {'err':e} )
+		saveError(req.url, e)
+		res.status( 500 ).json( {'err':'internal'} )
 	}
 });
 
@@ -44,8 +48,15 @@ router.post('/enterScore', jsonParser, async (req, res) => { // client posts gam
 	try {
 		res.json( await game.enterScore( gameId , userName) );
 	} catch(e) {
-		res.status( 500 ).json( {'err':e} )
+		saveError(req.url, e)
+		res.status( 500 ).json( {'err':'internal'} )
 	}
 });
+
+// Catch errors to console.log
+function saveError(url, e){
+	const fullUrl = '/api/game' + url
+	console.log( JSON.stringify({'url':fullUrl, 'err':e}, null , 4) )
+}
 
 module.exports = router;
