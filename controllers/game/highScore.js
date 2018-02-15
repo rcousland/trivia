@@ -1,7 +1,13 @@
-const model = require('../../models/');
-
-module.exports = async () => { // show 10 highest scores.
-	const result = await model.highScore.findTop10Scores();
-		if(result.length == 0 ) throw ({'game.highscore':'No Highscore data entered'})
-	return result
+module.exports = async (collections) => { // show 10 highest scores.
+	try{
+		const options = { 
+			sort: { score: -1},
+			limit: 10,
+			Projection: { _id: 0, gameId: 0}
+		}
+		const result = await collections.highScore.find( {}, options ).toArray()
+		return result
+	}catch(e){
+		console.log(e)
+	}
 };
