@@ -7,14 +7,18 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node scripts/dbSetupData.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.18.2",
     "express": "4.16.2",
+    "mongodb": "3.0.2",
     "mongojs": "2.5.0",
+    "morgan": "1.9.0",
     "path": "0.12.7"
   }
 }
