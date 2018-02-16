@@ -22,9 +22,9 @@ module.exports = async (gameId, userAnswer, collections) => { // enter answer. v
 		const question = await collections.questionsAndAnswers.findOne( query )
 			if (!question) throw ('questionId missing: ' + questionId)
 		const realAnswer = question.answer
-		const mCmd = new mongoUpdateAnswerCmd(gameId, questionId, userAnswer, realAnswer);
+		const mArgs = new mongoUpdateAnswerCmd(gameId, questionId, userAnswer, realAnswer);
 		console.log(mCmd.query, mCmd.update, mCmd.returnNewDoc)
-		const gameUpdate = await collections.games.findAndModify( mCmd.query, [], mCmd.update, mCmd.returnNewDoc )
+		const gameUpdate = await collections.games.findAndModify( mArgs.query, [], mArgs.update, mArgs.returnNewDoc )
 			if (!gameUpdate) throw ('Unable to update answer of gameId_questionId: ' + gameId + '_' + questionId)
 		count = Object.keys(gameUpdate.userAnswers).length;
 		const lastUserAnswer = gameUpdate.userAnswers[ count - 1 ];
