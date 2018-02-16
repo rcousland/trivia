@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const jsonParser = require('body-parser').json();
 const game = require('../../controllers/game/');
+const errToJson = require('utils-error-to-json');
 
 module.exports = function(collections){
 
 	router.get('/newgame', async (req, res) => { // generate new gameId. pass to client
 		try {
-			res.json( await game.newGame(collections) );
+			const result = await game.newGame(collections)
+			res.json( result );
 		} catch(e) {
 			saveError(req.url, e)
 			res.status( 500 ).json( {'err':'internal'} )
@@ -16,7 +18,14 @@ module.exports = function(collections){
 
 	router.get('/highScore', async (req, res) => { // get top 10 results
 		try {
-			res.json( await game.highScore(collections) );
+			const response = await game.highScore(collections)
+			var result
+			if(response.missing) {
+				saveError(req.url, response)
+				result = {'missing': response.missing}
+			}
+			else result = response
+			res.json( result );
 		} catch(e) {
 			saveError(req.url, e)
 			res.status( 500 ).json( {'err':'internal'} )
@@ -26,7 +35,19 @@ module.exports = function(collections){
 	router.post('/question', jsonParser, async (req, res) => { // get next question
 		const gameId = req.body.gameId;
 		try {
-			res.json( await game.question(gameId, collections) );
+
+			const response = await game.question(gameId, collections)
+			var result
+			if(response.missing) {
+				saveError(req.url, response)
+				result = {'missing': response.missing}
+			}
+			else result = response
+			res.json( result );
+
+
+			//res.json( await game.question(gameId, collections) );
+
 		} catch(e) {
 			saveError(req.url, e)
 			res.status( 500 ).json( {'err':'internal'} )
@@ -45,10 +66,17 @@ module.exports = function(collections){
 	});
 
 	router.post('/enterScore', jsonParser, async (req, res) => { // client posts gameId and Name. return top 10 scores
-		const gameId = req.body.gameId;
-		const userName = req.body.userName;
 		try {
-			res.json( await game.enterScore( gameId , userName, collections) );
+			const gameId = req.body.gameId;
+			const userName = req.body.userName;
+			const highScore = await game.enterScore( gameId , userName, collections);
+			var result
+			if(highScore.missing) {
+				saveError(req.url, highScore)
+				result = {'missing': highScore.missing}
+			}
+			else result = highScore
+			res.json( result );
 		} catch(e) {
 			saveError(req.url, e)
 			res.status( 500 ).json( {'err':'internal'} )
@@ -57,8 +85,11 @@ module.exports = function(collections){
 
 	// Catch errors to console.log
 	function saveError(url, e){
+		var message
 		const fullUrl = '/api/game' + url
-		console.log( JSON.stringify({'url':fullUrl, 'err':e}, null , 4) )
+			if( e.missing ) message = {'url':fullUrl, e}
+			else message = {'url':fullUrl, 'err':errToJson(e)}
+		console.log( JSON.stringify( message , null , 4) )
 	}
 	
 	return router
