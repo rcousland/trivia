@@ -1,10 +1,11 @@
 const express = require('express');
 const morgan = require('morgan')
 const app = express();
-const e = require('./config/express.js');
+const e = require('./config/express.js'); // express config
 const getCollections = require('./controllers/mongo.js')
 const gameRoutes = require('./routes/api/game.js')
 const catchAllRoute = require('./routes/catchAll.js')
+    require('./globals/')
 
 load()
 async function load(){
