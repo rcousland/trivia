@@ -1,4 +1,5 @@
 node_modules/
 public/*
 !public/404
+!public/mat
 package-lock.json
