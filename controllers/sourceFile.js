@@ -1,3 +1,3 @@
-module.exports = function(sourceFileName){
-    return sourceFileName.replace(global.rootDir,'');
-}
+module.exports = (sourceFileName) => {
+	return sourceFileName.replace(global.rootDir,'');
+};
