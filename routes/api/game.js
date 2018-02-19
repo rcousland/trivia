@@ -33,23 +33,25 @@ module.exports = function(collections){
 	});
 
 	router.post('/question', jsonParser, async (req, res) => { // get next question
+		console.log(req.body)
 		const gameId = req.body.gameId;
 		try {
 
 			const response = await game.question(gameId, collections);
-			var result;
-			if(response.missing) {
-				saveError(req.url, response);
-				result = {'missing': response.missing};
-			}
-			else result = response;
-			res.json( result );
+			// var result;
+			// if(response.missing) {
+			// 	saveError(req.url, response);
+			// 	result = {'missing': response.missing};
+			// }
+			// else result = response;
+			res.json( response );
 
 
 			//res.json( await game.question(gameId, collections) );
 
 		} catch(e) {
-			saveError(req.url, e);
+			console.log(e)
+			//saveError(req.url, e);
 			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
@@ -60,7 +62,8 @@ module.exports = function(collections){
 		try {
 			res.json( await game.answer(gameId,userAnswer, collections) );
 		} catch(e) {
-			saveError(req.url, e);
+			console.log(e)
+			//saveError(req.url, e);
 			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});

@@ -6,6 +6,10 @@
   "directories": {
     "example": "examples"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rcousland/trivia.git"
+  },
   "scripts": {
     "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1",
