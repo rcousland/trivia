@@ -3,7 +3,7 @@ const errorMsg = require('../errorSchema.js')
 const __sf = require('../sourceFile')(__filename) //get sourcefile path relative to project
 
 module.exports = async (gameId, collections) => { // get questions
-	// try{
+	try{
 		var query = {'gameId': gameId};
 		const game = await collections.games.findOne( query)
 			if (0 ===0) throw new errorMsg('missing', query, __sf, __line)	
@@ -22,7 +22,7 @@ module.exports = async (gameId, collections) => { // get questions
 			'o4': qaData.o4
 		}
 		return result
-	// }catch(e) {
-	// 	throw(e)
-	// }
+	}catch(err) {
+		throw(err)
+	}
 };

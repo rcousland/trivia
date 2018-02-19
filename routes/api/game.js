@@ -8,27 +8,27 @@ module.exports = function(collections){
 
 	router.get('/newgame', async (req, res) => { // generate new gameId. pass to client
 		try {
-			const result = await game.newGame(collections)
+			const result = await game.newGame(collections);
 			res.json( result );
 		} catch(e) {
-			saveError(req.url, e)
-			res.status( 500 ).json( {'err':'internal'} )
+			res.status( 500 ).json( {'err':'internal'} );
+			saveError(req.url, e);
 		}
 	});
 
 	router.get('/highScore', async (req, res) => { // get top 10 results
 		try {
-			const response = await game.highScore(collections)
-			var result
+			const response = await game.highScore(collections);
+			var result;
 			if(response.missing) {
-				saveError(req.url, response)
-				result = {'missing': response.missing}
+				saveError(req.url, response);
+				result = {'missing': response.missing};
 			}
-			else result = response
+			else result = response;
 			res.json( result );
 		} catch(e) {
-			saveError(req.url, e)
-			res.status( 500 ).json( {'err':'internal'} )
+			saveError(req.url, e);
+			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
 
@@ -36,21 +36,21 @@ module.exports = function(collections){
 		const gameId = req.body.gameId;
 		try {
 
-			const response = await game.question(gameId, collections)
-			var result
+			const response = await game.question(gameId, collections);
+			var result;
 			if(response.missing) {
-				saveError(req.url, response)
-				result = {'missing': response.missing}
+				saveError(req.url, response);
+				result = {'missing': response.missing};
 			}
-			else result = response
+			else result = response;
 			res.json( result );
 
 
 			//res.json( await game.question(gameId, collections) );
 
 		} catch(e) {
-			saveError(req.url, e)
-			res.status( 500 ).json( {'err':'internal'} )
+			saveError(req.url, e);
+			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
 
@@ -60,8 +60,8 @@ module.exports = function(collections){
 		try {
 			res.json( await game.answer(gameId,userAnswer, collections) );
 		} catch(e) {
-			saveError(req.url, e)
-			res.status( 500 ).json( {'err':'internal'} )
+			saveError(req.url, e);
+			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
 
@@ -70,27 +70,28 @@ module.exports = function(collections){
 			const gameId = req.body.gameId;
 			const userName = req.body.userName;
 			const highScore = await game.enterScore( gameId , userName, collections);
-			var result
+			var result;
 			if(highScore.missing) {
-				saveError(req.url, highScore)
-				result = {'missing': highScore.missing}
+				saveError(req.url, highScore);
+				result = {'missing': highScore.missing};
 			}
-			else result = highScore
+			else result = highScore;
 			res.json( result );
 		} catch(e) {
-			saveError(req.url, e)
-			res.status( 500 ).json( {'err':'internal'} )
+			saveError(req.url, e);
+			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
 
 	// Catch errors to console.log
 	function saveError(url, e){
-		var message
-		const fullUrl = '/api/game' + url
-			if( e.missing ) message = {'url':fullUrl, e}
-			else message = {'url':fullUrl, 'err':errToJson(e)}
-		console.log( JSON.stringify( message , null , 4) )
+		var message;
+		const fullUrl = '/api/game' + url;
+		if( e.missing ) message = {'url':fullUrl, e};
+		else message = {'url':fullUrl, 'err':errToJson(e)};
+		throw message;
+		//console.log( JSON.stringify( message , null , 4) )
 	}
 	
-	return router
-}
+	return router;
+};

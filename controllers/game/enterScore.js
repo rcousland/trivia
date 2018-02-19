@@ -17,8 +17,8 @@ module.exports = async (gameId, userName, collections) => { // show 10 highest s
 			// highScoreList returns a readable .missing object if missing
 		return ( highScoreList )
 	}
-	catch(e){
+	catch(err){
 		if (!insert) throw new errorMsg('err', 'Unable to insert new userName! userName_gameId: '+userName+'_'+gameId , __sf , 15)
-		else throw e
+		else throw err
 	}
 };

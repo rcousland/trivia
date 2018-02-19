@@ -18,6 +18,6 @@ module.exports = function (gameId, questionId, userAnswer, realAnswer) {
 	else{
 		update.$push.userAnswers.correctAnswer = false;	
 	}
-	this.update = update
-	this.returnNewDoc = {new:true}
+	this.update = update;
+	this.returnNewDoc = {new:true};
 };
