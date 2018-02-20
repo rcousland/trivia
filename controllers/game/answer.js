@@ -26,11 +26,12 @@ module.exports = async (gameId, userAnswer, collections) => { // enter answer. v
 			//if (!question) throw new errorMsg('missing', 'questionId: '+questionId, __sf, __line);	
 		const realAnswer = question.answer;
 		const mArgs = new mongoUpdateAnswerCmd(gameId, questionId, userAnswer, realAnswer);
-		const gameUpdate = await collections.games.findAndModify( mArgs.query, [], mArgs.update, mArgs.returnNewDoc );
+		const mUpdate = await collections.games.findAndModify( mArgs.query, [], mArgs.update, mArgs.returnNewDoc );
+		const gameUpdate = mUpdate.value
 			//if (!gameUpdate) throw new errorMsg('err', 'Unable to update answer of gameId_questionId: '+gameId+'_'+questionId, __sf, __line);
-		count = Object.keys(gameUpdate.value.userAnswers).length;
-		const lastUserAnswer = gameUpdate.value.userAnswers[ count - 1 ];
-		const score = gameUpdate.value.score;
+		count = Object.keys(gameUpdate.userAnswers).length;
+		const lastUserAnswer = gameUpdate.userAnswers[ count - 1 ];
+		const score = gameUpdate.score;
 		var result = {
 			'gameId': gameId,
 			'questionId':  lastUserAnswer.questionId,
