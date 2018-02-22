@@ -4,6 +4,7 @@ var gameStatus = 'newGame'
 var gameId
 var progress = 0
 var maxQuestions = 6
+var gameFinished
 
 //id="questionId"
 //id="o1"
@@ -29,25 +30,38 @@ $( "#o4" ).click(function() {
 $( "#view-source" ).click(async function() {
 	console.log(gameStatus)
 	if(gameStatus == 'newGame'){
-		await newGame(this)
+		await newGame()
+		changeActionText("Submit")
 		await getQuestions()
+		gameStatus = 'readyToSubmit'
 		showMainCard()
 	}	
-	else if(gameStatus == 'readyToSumbit'){
+	else if(gameStatus == 'readyToSubmit'){
 		if(answerSelected == null){
 			errorToast('Please select an Answer!')
 		}else{
 			const answer = await submitAnswer()
 			showFeedback(answer)
-			progress ++
-			updateProgress( Math.round(progress/maxQuestions*100) ) 
-			changeActionText('Next Question')
-			gameStatus = 'nextQuestion'
+			maxQuestions = answer.maxQuestions
+			if (answer.gameFinished) {
+				gameStatus = 'finished'
+				gameFinished(answer)
+			}else{
+				progress ++
+				updateProgress( Math.round(progress/maxQuestions*100) ) 
+				changeActionText('Next')
+				gameStatus = 'nextQuestion'
+			}
 		}
 	}
 	else if(gameStatus == 'nextQuestion'){
 		resetButtons()
 		answerSelected = null
+		hideMainCard()
+		await getQuestions()
+		nextMainCard()
+		gameStatus = 'readyToSubmit'
+		changeActionText("Submit")
 	}
 	else{
 		//enterScore()
@@ -57,9 +71,8 @@ $( "#view-source" ).click(async function() {
 // -------------------------------------------------------------------
 
 
-async function newGame(id){
+async function newGame(){
 	console.log('newGame()')
-	$(id).text("Submit Answer")
 	gameId = await $.get( "/api/game/newgame")
 	console.log(gameId)	
 }
@@ -78,11 +91,18 @@ async function getQuestions(){
 	$("#t2").text(question.o2)
 	$("#t3").text(question.o3)
 	$("#t4").text(question.o4)
-	gameStatus = 'readyToSubmit'
 }
 function showMainCard(){
 	console.log('showMainCard()')
 	$( "#mainCard" ).show( 'bounce', { times: 2 }, 1000 )
+}
+function hideMainCard(){
+	console.log('hideMainCard()')
+	$("#mainCard").hide("slide", { direction: "left" }, 300); 
+}
+function nextMainCard(){
+	console.log('nextMainCard()')
+	$("#mainCard").show("slide", { direction: "right" }, 300); 
 }
 
 function errorToast(message){
@@ -112,17 +132,18 @@ function showFeedback(answer){
 	}else{
 		$('#'+answerSelected).animate({backgroundColor: "#ff1a1a" }) //red
 	}
-	gameStatus = "nextQuestion"
 	$('#view-source').text("Next question")
 }
 
 function updateProgress(percent){
+	console.log('percent()')
 	document.querySelector('#p1').addEventListener('mdl-componentupgraded', function() {
 		this.MaterialProgress.setProgress(percent);
 	});
 }
 
 function changeActionText(text){
+	console.log('changeActionText()')
 	$('#view-source').text(text)
 }
 
@@ -149,4 +170,10 @@ function selectAnswer(id){
 		answerSelected = null
 	}
 	console.log(answerSelected)
+}
+
+function gameFinished(answer){
+	// show users score
+	// ask for users input.
+	// upload score and display top 10 scores
 }
