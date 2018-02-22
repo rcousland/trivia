@@ -139,6 +139,28 @@
             </ul>
             
           </section>
+          <section id="userScoreCard"  class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                <h4>Your Score</h4>
+                <h5 id="userScoreText" class="mdl-cell mdl-cell--12-col">6 out of 6</h5>
+
+                  <!-- Textfield with Floating Label -->
+                  <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input class="mdl-textfield__input" type="text" id="user" pattern="[A-Z,a-z, ]*">
+                      <label class="mdl-textfield__label" for="user">Your name...</label>
+                      <span class="mdl-textfield__error">Letters and spaces only</span>
+                    </div>
+                  </form>
+              </div>
+              <div class="mdl-card__actions">
+                <a href="#" class="mdl-button">Submit Score</a>
+              </div>
+            </div>
+            <!-- Simple MDL Progress Bar -->
+            <div id="p1" class="mdl-progress mdl-js-progress"></div>            
+          </section>
           <!--
           <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
              <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white">
