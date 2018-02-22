@@ -1,17 +1,13 @@
-const mongojs = require('mongojs');
+const mongodb = require('mongodb');
 const m = require('../config/mongo.js');
 
-// Connect to mongo DB and set events
-const db = mongojs( m.url() , [] , m.options );
-
-db.on('error', (err) => {
-	console.log('database error', err);
-});
-db.on('connect', () => {
-	console.log('database connected');
-});
-db.on('close', () => {
-	console.log('database disconnected');
-});
-
-module.exports = db;
+module.exports = async function(){
+	const db = await mongodb.MongoClient.connect(m.url, m.options);
+	const dbo = db.db(m.dbName);       
+	return {
+		games: dbo.collection('games'),
+		questionsAndAnswers: dbo.collection('questionsAndAnswers'),
+		highScore: dbo.collection('highScore'),
+		db: db
+	};
+};

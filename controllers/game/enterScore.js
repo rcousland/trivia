@@ -1,53 +1,24 @@
-const model = require('../../models/');
-const game = require('../game/');
+const highScore = require('./highScore.js')
+const errorMsg = require('../errorSchema.js')
+const __sf = require('../sourceFile')(__filename) //get sourcefile path relative to project
 
-module.exports = (gameId, userName, callback) => {
-	
-	getGameIdScore();
-	function getGameIdScore(){
-		var query = {'gameId': gameId};
-		model.games.findOne( query, (err,data) => {
-		// count user answers allready made
-			// error logging
-			if (err){
-				return callback(err,null);
-			}
-			else if(data == null ){
-				return callback('gameId missing',null);
-			}
-			// pass score to next function
-			else{
-				var nameAndScoreEntry = {
-					gameId: gameId,
-					userName: userName,
-					score: data.score
-				};
-				updateHighScoreList(nameAndScoreEntry);
-			}
-		});
+module.exports = async (gameId, userName, collections) => { // show 10 highest scores.
+	try{
+		const query = {'gameId': gameId};
+		const game = await collections.games.findOne( query )
+			if (!game) throw new errorMsg('missing', query , __sf , __line)			
+		const nameAndScoreEntry = {
+			'gameId': gameId,
+			'userName': userName,
+			'score': game.score
+		};
+		const insert = await collections.highScore.insert( nameAndScoreEntry )
+		const highScoreList = await highScore(collections)
+			// highScoreList returns a readable .missing object if missing
+		return ( highScoreList )
 	}
-
-	function updateHighScoreList(nameAndScoreEntry){
-		model.highScore.insert( nameAndScoreEntry, (err,data) => {
-			if (err){
-				return callback(err,null);
-			}
-			else if(data.userName == null ){
-				return callback('Mongo: Unable to insert new userName',null);
-			}
-			else {
-				getHighScores();
-			}
-		});
-	}
-	function getHighScores(){
-		game.highScore( (err,data) => {
-			if (err){
-				return callback(err,null);
-			}
-			else {
-				return callback(null,data);
-			}	
-		});
+	catch(err){
+		if (!insert) throw new errorMsg('err', 'Unable to insert new userName! userName_gameId: '+userName+'_'+gameId , __sf , 15)
+		else throw err
 	}
 };

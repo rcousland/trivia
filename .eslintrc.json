@@ -5,6 +5,7 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
+        "ecmaVersion": 8,
         "sourceType": "module"
     },
     "rules": {
@@ -23,7 +24,6 @@
         "semi": [
             "error",
             "always"
-        ],
-        "no-use-before-define": 0
+        ]
     }
 }

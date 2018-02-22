@@ -1,0 +1,27 @@
+.mdl-demo section .section__circle-container > .section__circle-container__circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 23px 0;
+  }
+
+  .mdl-demo main > .mdl-layout__tab-panel {
+    padding: 8px;
+    padding-top: 20px;
+  }
+  #p1{
+    width:100%;
+  }
+.mdl-demo .mdl-card .mdl-card__supporting-text {
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+}
+
+.mdl-color--primary{
+    background-color: green;
+}
+#view-source{
+    margin-bottom: 200px;
+
+}

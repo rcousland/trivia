@@ -1,19 +1,29 @@
 {
-  "name": "Trivia",
+  "name": "trivia",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "directories": {
     "example": "examples"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rcousland/trivia.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node scripts/dbSetupData.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "2.0.1",
     "body-parser": "1.18.2",
     "express": "4.16.2",
-    "mongojs": "2.4.1"
+    "mongodb": "3.0.2",
+    "morgan": "1.9.0",
+    "path": "0.12.7",
+    "utils-error-to-json": "1.0.0"
   }
 }

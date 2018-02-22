@@ -1,125 +1,57 @@
-const model = require('../../models/');
 const maxQuestions = require('../../config/game.js').maxQuestions;
+const mongoUpdateAnswerCmd = require('../mongoUpdateAnswerCmd.js');
+const errorMsg = require('../errorSchema.js');
+const __sf = require('../sourceFile')(__filename); //get sourcefile path relative to project
 
-module.exports = (gameId, userAnswer,  callback) => {
-// enter usersAnswer into gamesId document. validate answer. return outcome.
-	var questionId, realAnswer, isUserAnswerCorrect;
-
-	getquestionID();
-	function getquestionID(){
+module.exports = async (gameId, userAnswer, collections) => { // enter answer. validate. return outcome
+	try{
 		var query = {'gameId': gameId};
-		model.games.findOne( query, (err,data) => {
-			// count user answers allready made
-			var count = Object.keys(data.userAnswers).length;
-			// error logging
-			if (err){
-				return callback(err,null);
-			}
-			else if(data == null ){
-				return callback('gameId missing',null);
-			}
-			// when user has allready finished game
-			else if( count == maxQuestions ){
-				var response = {
-					gameId: gameId,
-					gameFinished: true,
-					score: data.score,
-					maxQuestions: maxQuestions,
-					userAnswers: data.userAnswers
+		const game = await collections.games.findOne( query );
+			//if (!game) throw new errorMsg('missing', 'gameId: '+gameId, __sf, __line);
+		var count = Object.keys(game.userAnswers).length;
+			//if (!count) throw new errorMsg('missing', 'game.userAnswers! gameId: '+gameId, __sf , __line);
+			 if( count == maxQuestions){ // if game=finished
+				const result = {
+					'gameId': gameId,
+					'gameFinished': true,
+					'score': game.score,
+					'maxQuestions': maxQuestions,
+					'userAnswers': game.userAnswers
 				};
-				return callback(null, response);
+				return ( result );
 			}
-			// when user hasn't allready finished game
-			else{
-				questionId = data.nextQuestion;
-				getRealAnswer();
-			}
-		});
-	}
-
-	// get real answer
-	function getRealAnswer(){
-		var query = {'questionId': questionId};
-		model.qa.findOne( query, (err,data) => {
-			if (err){
-				return callback(err,null);
-			}
-			else if(data == null ){
-				return callback('gameId missing',null);
-			}
-			else{
-				realAnswer = data.answer;
-				verifyUserAnswer();
-			}
-		});
-	}
-
-	// compare user uanswer to real answer
-	function verifyUserAnswer(){
-		if( userAnswer == realAnswer ){
-			isUserAnswerCorrect = true;
-		}
-		else{
-			isUserAnswerCorrect = false;
-		}
-		updateGame();
-	}
-
-	// update gamieId document with user results. return response from new data entered into mongo
-	function updateGame(){
-		// create command for mongo
-		var mongoCmd = {
-			query: {'gameId': gameId },
-			update: {
-				$push: {userAnswers: {'questionId' : questionId, 'userAnswer': userAnswer, 'correctAnswer': isUserAnswerCorrect} }, 
-				$inc: {nextQuestion: 1 }
-			},
-			new: true
+		const questionId = game.nextQuestion; // if game=in progress
+		query = {'questionId': questionId};
+		const question = await collections.questionsAndAnswers.findOne( query );
+			//if (!question) throw new errorMsg('missing', 'questionId: '+questionId, __sf, __line);	
+		const realAnswer = question.answer;
+		const mArgs = new mongoUpdateAnswerCmd(gameId, questionId, userAnswer, realAnswer);
+		const mUpdate = await collections.games.findAndModify( mArgs.query, [], mArgs.update, mArgs.returnNewDoc );
+		const gameUpdate = mUpdate.value
+			//if (!gameUpdate) throw new errorMsg('err', 'Unable to update answer of gameId_questionId: '+gameId+'_'+questionId, __sf, __line);
+		count = Object.keys(gameUpdate.userAnswers).length;
+		const lastUserAnswer = gameUpdate.userAnswers[ count - 1 ];
+		const score = gameUpdate.score;
+		var result = {
+			'gameId': gameId,
+			'questionId':  lastUserAnswer.questionId,
+			'userAnswer': lastUserAnswer.userAnswer,
+			'correctAnswer': lastUserAnswer.correctAnswer,
+			'score': score,
+			'maxQuestions': maxQuestions
 		};
-		// increase score if correct
-		if (isUserAnswerCorrect){
-			mongoCmd.update.$inc.score =  1 ;
-		}
-		model.games.findAndModify( mongoCmd, (err,data) => {
-			
-			// Error handling
-			if (err){
-				return callback(err,null);
+			if (count < maxQuestions) { // if game=in progress
+				result.gameFinished = false;
+				result.nextQuestion = gameUpdate.nextQuestion;
 			}
-			else if(data == null ){
-				return callback('gameId missing',null);
+			else if( count == maxQuestions ){ //if game=finished
+				result.gameFinished = true;
+				result.userAnswers = gameUpdate.userAnswers;
 			}
-			else{
-				sendResponse(data);
-			}
-		});
+			//else throw new errorMsg('err', 'count > maxQuestions. should be reverse'+count+'_'+maxQuestions, __sf, __line);
+			return ( result );
 	}
-	function sendResponse(data){
-		var lastIndex = Object.keys(data.userAnswers).length - 1;
-		var count = lastIndex + 1;
-		var response = {
-			'questionId':  data.userAnswers[lastIndex].questionId,
-			'userAnswer': data.userAnswers[lastIndex].userAnswer,
-			'correctAnswer': data.userAnswers[lastIndex].correctAnswer,
-			'score': data.score,
-			'maxQuestions': maxQuestions,
-		};
-
-		// if game is still in progress
-		if ( count < maxQuestions){
-			response.nextQuestion = data.nextQuestion;
-			response.gameFinished = false;
-			return callback(null, response);
-		}
-		// if game has finished
-		else if ( count ==  maxQuestions ){
-			response.gameFinished = true;
-			response.userAnswers = data.userAnswers;
-			return callback(null, response);
-		}
-		// error handling
-		else {
-			return callback('answer.js line 122 catch', null);
-		}
+	catch(err){
+		throw err;
 	}
 };
