@@ -4,7 +4,7 @@ var gameStatus = 'newGame'
 var gameId
 var progress = 0
 var maxQuestions = 6
-var gameFinished
+var userScore
 
 //id="questionId"
 //id="o1"
@@ -44,8 +44,9 @@ $( "#view-source" ).click(async function() {
 			showFeedback(answer)
 			maxQuestions = answer.maxQuestions
 			if (answer.gameFinished) {
+				userScore = answer
 				gameStatus = 'finished'
-				gameFinished(answer)
+				changeActionText("Enter Score")
 			}else{
 				progress ++
 				updateProgress( Math.round(progress/maxQuestions*100) ) 
@@ -63,7 +64,8 @@ $( "#view-source" ).click(async function() {
 		gameStatus = 'readyToSubmit'
 		changeActionText("Submit")
 	}
-	else{
+	else if(gameStatus == 'finished'){
+		submitScore(userScore)
 		//enterScore()
 	}
 });
@@ -103,6 +105,22 @@ function hideMainCard(){
 function nextMainCard(){
 	console.log('nextMainCard()')
 	$("#mainCard").show("slide", { direction: "right" }, 300); 
+}
+function showUserScoreCard(){
+	console.log('showUserScoreCard()')
+	$( "#userScoreCard" ).show( 'bounce', { times: 2 }, 1000 )
+}
+function hideUserScoreCard(){
+	console.log('hideUserScoreCard()')
+	$( "#userScoreCard" ).hide("slide", { direction: "left" }, 300); 
+}
+function showHighScoreCard(){
+	console.log('showHighScoreCard()')
+	$( "#highScoreCard" ).show( 'bounce', { times: 2 }, 1000 )	
+}
+function hidehighScoreCard(){
+	console.log('hideHighScoreCard()')
+	$( "#highScoreCard" ).hide("slide", { direction: "left" }, 300); 
 }
 
 function errorToast(message){
@@ -172,8 +190,44 @@ function selectAnswer(id){
 	console.log(answerSelected)
 }
 
-function gameFinished(answer){
+function submitScore(score){
+	const usersScore = score.score
+	const maxQuestions = score.maxQuestions
+	const scoreSentence = [userScore," ","out of"," ",maxQuesitons," ","questions correct!"].join()
+	// populate users score
+	$("#userScoreText").text(scoreSentence)
 	// show users score
-	// ask for users input.
+	showUserScoreCard()
+
+	// use submits name
 	// upload score and display top 10 scores
+
 }
+// const show = {
+// 	showMainCard: function(){
+// 		console.log('showMainCard()')
+// 		$( "#mainCard" ).show( 'bounce', { times: 2 }, 1000 )
+// 	},
+// 	userScoreCard: function(){
+// 		console.log('showUserScoreCard()')
+// 		$( "#userScoreCard" ).show( 'bounce', { times: 2 }, 1000 )
+// 	},
+// 	highScoreCard: function(){
+// 		console.log('showHighScoreCard()')
+// 		$( "#highScoreCard" ).show( 'bounce', { times: 2 }, 1000 )	
+// 	}
+// }
+// const hide = {
+// 	mainCard: function(){
+// 		console.log('hideMainCard()')
+// 		$("#mainCard").hide("slide", { direction: "left" }, 300); 
+// 	},
+// 	userScoreCard: function(){
+// 		console.log('hideUserScoreCard()')
+// 		$( "#userScoreCard" ).hide("slide", { direction: "left" }, 300); 
+// 	},
+// 	highScoreCard: function(){
+// 		console.log('hideHighScoreCard()')
+// 		$( "#highScoreCard" ).hide("slide", { direction: "left" }, 300); 
+// 	}
+// }
