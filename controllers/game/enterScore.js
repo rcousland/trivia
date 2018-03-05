@@ -14,11 +14,9 @@ module.exports = async (gameId, userName, collections) => { // show 10 highest s
 		};
 		const insert = await collections.highScore.insert( nameAndScoreEntry )
 		const highScoreList = await highScore(collections)
-			// highScoreList returns a readable .missing object if missing
 		return ( highScoreList )
 	}
 	catch(err){
-		if (!insert) throw new errorMsg('err', 'Unable to insert new userName! userName_gameId: '+userName+'_'+gameId , __sf , 15)
-		else throw err
+		throw err
 	}
 };

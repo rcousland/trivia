@@ -16,7 +16,7 @@ async function load(){
 		var collections = await getCollections();
 		console.log(e.host + ' Connected to mongodb');
 
-		// Catch error codes to console.log
+		// Catch rest codes to console
 		app.use( morgan(':method :url :status :res[content-length] - :response-time ms') );
 
 		// Load Routes
