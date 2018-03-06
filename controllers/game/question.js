@@ -1,6 +1,4 @@
 const maxQuestions = require('../../config/game.js').maxQuestions;
-const errorMsg = require('../errorSchema.js')
-const __sf = require('../sourceFile')(__filename) //get sourcefile path relative to project
 
 module.exports = async (gameId, collections) => { // get questions
 	try{

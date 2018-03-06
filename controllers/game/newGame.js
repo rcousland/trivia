@@ -1,6 +1,3 @@
-const errorMsg = require('../errorSchema.js');
-const __sf = require('../sourceFile')(__filename); //get sourcefile path relative to project
-
 module.exports = async (collections) => { // return gameId
 	try{
 		var gameId, query, dbMatch;

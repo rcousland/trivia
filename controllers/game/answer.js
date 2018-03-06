@@ -1,7 +1,5 @@
 const maxQuestions = require('../../config/game.js').maxQuestions;
 const mongoUpdateAnswerCmd = require('../mongoUpdateAnswerCmd.js');
-const errorMsg = require('../errorSchema.js');
-const __sf = require('../sourceFile')(__filename); //get sourcefile path relative to project
 
 module.exports = async (gameId, userAnswer, collections) => { // enter answer. validate. return outcome
 	try{

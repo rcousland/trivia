@@ -11,8 +11,8 @@ module.exports = function(collections){
 			const result = await game.newGame(collections);
 			res.json( result );
 		} catch(e) {
-			res.status( 500 ).json( {'err':'internal'} );
 			saveError(req.url, e);
+			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
 
@@ -38,20 +38,9 @@ module.exports = function(collections){
 		try {
 
 			const response = await game.question(gameId, collections);
-			// var result;
-			// if(response.missing) {
-			// 	saveError(req.url, response);
-			// 	result = {'missing': response.missing};
-			// }
-			// else result = response;
 			res.json( response );
-
-
-			//res.json( await game.question(gameId, collections) );
-
 		} catch(e) {
-			console.log(e)
-			//saveError(req.url, e);
+			saveError(req.url, e);
 			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
@@ -62,8 +51,7 @@ module.exports = function(collections){
 		try {
 			res.json( await game.answer(gameId,userAnswer, collections) );
 		} catch(e) {
-			console.log(e)
-			//saveError(req.url, e);
+			saveError(req.url, e);
 			res.status( 500 ).json( {'err':'internal'} );
 		}
 	});
@@ -88,12 +76,8 @@ module.exports = function(collections){
 
 	// Catch errors to console.log
 	function saveError(url, e){
-		var message;
 		const fullUrl = '/api/game' + url;
-		if( e.missing ) message = {'url':fullUrl, e};
-		else message = {'url':fullUrl, 'err':errToJson(e)};
-		throw message;
-		//console.log( JSON.stringify( message , null , 4) )
+		console.log(fullUrl, e)
 	}
 	
 	return router;
