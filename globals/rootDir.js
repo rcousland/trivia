@@ -1,1 +1,0 @@
-global.rootDir = require('app-root-path').path; // Project dir

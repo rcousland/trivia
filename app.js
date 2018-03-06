@@ -10,8 +10,6 @@ const catchAllRoute = require('./routes/catchAll.js');
 load();
 async function load(){
 	try{
-		await require('./globals/'); //load globals
-
 		// Connect to mongoDB and return collection methods
 		var collections = await getCollections();
 		console.log(e.host + ' Connected to mongodb');
