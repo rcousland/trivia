@@ -1,14 +1,14 @@
 version: "2"
 services:
-  trivia-app:
-    build: .
-    ports:
-      - "80:80"
-    links:
-      - mongo
   mongo:
     image: mongo
     volumes:
       - /data/db:/data/db
     ports:
       - "27017:27017"
+  trivia-app:
+    build: .
+    ports:
+      - "80:80"
+    links:
+      - mongo
