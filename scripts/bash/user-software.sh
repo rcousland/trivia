@@ -19,6 +19,7 @@ useradd appuser
 
 # setup sudo permissions
 echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/docker' >> /etc/sudoers
+echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/docker-compose' >> /etc/sudoers
 echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/git' >> /etc/sudoers
 
 #create dirs and change permissions
