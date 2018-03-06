@@ -4,6 +4,11 @@ cd /data/app
 git clone https://github.com/rcousland/trivia.git
 
 #build docker image
-cd /data/app/trivia
-docker-compose build
-docker-compose up
+cd /data/app/trivia/scripts/docker/app
+docker build -t trivia-app
+
+#run mongodb docker
+sudo docker run -d -p 27017:27017 -v /data/db:/data/db mongo
+
+#run trivia-app
+sudo docker run -d -p 80:80 trivia-app
