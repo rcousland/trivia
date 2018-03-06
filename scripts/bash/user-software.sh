@@ -1,5 +1,3 @@
-# Setup new user with folders and permissions. run as root or sudo
-
 # install git
 apt-get update
 apt-get install git
@@ -17,14 +15,14 @@ apt-get update
 apt-get install docker-ce
 
 # create new user and login
-echo appuser:password | sudo chpasswd
+useradd appuser
 
 # setup sudo permissions
-echo 'user appuser = (root) NOPASSWD: /sbin/apt-get' >> /etc/sudoers
-echo 'user appuser = (root) NOPASSWD: /sbin/curl' >> /etc/sudoers
-echo 'user appuser = (root) NOPASSWD: /sbin/add-apt-repository' >> /etc/sudoers
+echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/docker' >> /etc/sudoers
+echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/git' >> /etc/sudoers
 
 #create dirs and change permissions
+mkdir /data
 mkdir /data/db
 mkdir /data/app
 chown appuser /data/db

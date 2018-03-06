@@ -1,10 +1,14 @@
-version: '2.1'
-
+version: "2"
 services:
-  trivia:
-    image: trivia
+  trivia-app:
     build: .
-    environment:
-      NODE_ENV: production
     ports:
-      - 80:80
+      - "80:80"
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    volumes:
+      - /data/db:/data/db
+    ports:
+      - "27017:27017"
