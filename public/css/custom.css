@@ -15,13 +15,35 @@
 .mdl-demo .mdl-card .mdl-card__supporting-text {
   margin-top: 15px;
   margin-bottom: 15px;
-
 }
-
 .mdl-color--primary{
     background-color: green;
 }
-#view-source{
-    margin-bottom: 200px;
-
+#action-button {
+  position: fixed;
+  display: block;
+  right: 0;
+  bottom: 0;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  z-index: 900;
+}
+.demo-list-icon {
+  width: 300px;
+}
+.demo-card-square.mdl-card {
+  width: 320px;
+  height: 320px;
+}
+.demo-card-square > .mdl-card__title {
+  color: #fff;}
+.width-95{
+  margin: 0 auto;
+  width: 95%;
+}
+.no-border{
+  border: 0;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
 }
