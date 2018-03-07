@@ -6,10 +6,10 @@ ENV MONGO_HOST 127.0.0.1
 ENV MONGO_PORT 27017
 ENV MONGO_DBNAME trivia
 
+
 WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install --production --silent && mv node_modules ../
-RUN npm setup --production --silent
 COPY . .
 EXPOSE 80
-CMD npm start
+CMD bash
