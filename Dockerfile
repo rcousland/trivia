@@ -1,4 +1,4 @@
-FROM node:8.9-alpine
+FROM ubuntu:latest
 ENV NODE_ENV production
 ENV EXPRESS_HOST 127.0.0.1
 ENV EXPRESS_PORT 80
