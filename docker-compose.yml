@@ -6,9 +6,9 @@ services:
       - /data/db:/data/db
     ports:
       - "27017:27017"
+    network_mode: host
   trivia-app:
     build: .
     ports:
       - "80:80"
-    links:
-      - mongo
+    network_mode: host
