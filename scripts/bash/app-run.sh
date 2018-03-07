@@ -1,14 +1,17 @@
+#run mongodb docker
+sudo docker run -d -p 27017:27017 -v /data/db:/data/db mongo
+
 # donload git source. then setup docker images and start. run as appuser
 # clone git
 cd /data/app
 git clone https://github.com/rcousland/trivia.git
 
-#build docker image
-cd /data/app/trivia/scripts/docker/app
-sudo docker build -t trivia-app .
+# install packages
+npm install
 
-#run mongodb docker
-sudo docker run -d -p 27017:27017 -v /data/db:/data/db mongo
+# insert test data into DB
+npm run setup
 
-#run trivia-app
-sudo docker run -it -p 80:80 trivia-app
+# run app as background job
+# install pm2 use this tutorial
+#https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04

@@ -21,6 +21,8 @@ useradd appuser
 echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/docker' >> /etc/sudoers
 echo 'appuser ALL=(ALL) NOPASSWD: /usr/local/bin/docker-compose' >> /etc/sudoers
 echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/git' >> /etc/sudoers
+echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/npm' >> /etc/sudoers
+echo 'appuser ALL=(ALL) NOPASSWD: /usr/bin/node' >> /etc/sudoers
 
 #create dirs and change permissions
 mkdir /data
@@ -28,3 +30,13 @@ mkdir /data/db
 mkdir /data/app
 chown appuser /data/db
 chown appuser /data/app
+
+#redirect port 3000 to 80
+iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
+
+#allow port 80
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+#save iptables perminately
+sudo apt-get install iptables-persistent
+

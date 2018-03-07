@@ -9,6 +9,4 @@ WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 COPY . .
 RUN npm install --production --silent && mv node_modules ../
-RUN npm run setup --production --silent
 EXPOSE 80
-CMD npm start
