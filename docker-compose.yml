@@ -1,12 +1,5 @@
 version: "2.1"
 services:
-  mongo:
-    image: mongo
-    volumes:
-      - /data/db:/data/db
-    ports:
-      - "27017:27017"
-    network_mode: host
   trivia-app:
     build: .
     ports:
