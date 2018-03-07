@@ -11,4 +11,4 @@ sudo docker build -t trivia-app .
 sudo docker run -d -p 27017:27017 -v /data/db:/data/db mongo
 
 #run trivia-app
-sudo docker run -d --net="host" -p 80:80 trivia-app
+sudo docker run -it -p 80:80 trivia-app
