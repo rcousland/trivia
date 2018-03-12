@@ -1,7 +1,0 @@
-version: "2.1"
-services:
-  trivia-app:
-    build: .
-    ports:
-      - "80:80"
-    network_mode: host
