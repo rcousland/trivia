@@ -27,7 +27,6 @@ module.exports = function(collections){
 	});
 
 	router.post('/question', jsonParser, async (req, res) => { // get next question
-		console.log(req.body)
 		const gameId = req.body.gameId;
 		try {
 			const result = await game.question(gameId, collections);
