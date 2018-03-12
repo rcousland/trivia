@@ -40,6 +40,7 @@
 .width-95{
   margin: 0 auto;
   width: 95%;
+  max-width: 860px;
 }
 .no-border{
   border: 0;
