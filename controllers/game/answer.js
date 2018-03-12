@@ -6,17 +6,17 @@ module.exports = async (gameId, userAnswer, collections) => { // enter answer. v
 		var query = {'gameId': gameId};
 		const game = await collections.games.findOne( query );
 		var count = Object.keys(game.userAnswers).length;
-			 if( count == maxQuestions){ // if game=finished
-				const result = {
-					'gameId': gameId,
-					'gameFinished': true,
-					'score': game.score,
-					'maxQuestions': maxQuestions,
-					'userAnswers': game.userAnswers
-				};
-				return ( result );
-			}
-		const questionId = game.nextQuestion; // if game=in progress
+		if( count == maxQuestions){ // if game == finished
+			const result = {
+				'gameId': gameId,
+				'gameFinished': true,
+				'score': game.score,
+				'maxQuestions': maxQuestions,
+				'userAnswers': game.userAnswers
+			};
+			return ( result );
+		}
+		const questionId = game.nextQuestion; // if game == in progress
 		query = {'questionId': questionId};
 		const question = await collections.questionsAndAnswers.findOne( query );
 		const realAnswer = question.answer;
@@ -34,15 +34,15 @@ module.exports = async (gameId, userAnswer, collections) => { // enter answer. v
 			'score': score,
 			'maxQuestions': maxQuestions
 		};
-			if (count < maxQuestions) { // if game=in progress
-				result.gameFinished = false;
-				result.nextQuestion = gameUpdate.nextQuestion;
-			}
-			else if( count == maxQuestions ){ //if game=finished
-				result.gameFinished = true;
-				result.userAnswers = gameUpdate.userAnswers;
-			}
-			return ( result );
+		if (count < maxQuestions) { // if game == in progress
+			result.gameFinished = false;
+			result.nextQuestion = gameUpdate.nextQuestion;
+		}
+		else if( count == maxQuestions ){ //if game == finished
+			result.gameFinished = true;
+			result.userAnswers = gameUpdate.userAnswers;
+		}
+		return ( result );
 	}
 	catch(err){
 		throw err;
