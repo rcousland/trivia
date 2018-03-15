@@ -48,3 +48,6 @@
 .demo-card-wide > .mdl-card__menu {
   color: #fff;
 }
+.mdl-progress{
+    width: 100%
+}
